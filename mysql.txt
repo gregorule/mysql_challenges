@@ -63,3 +63,241 @@ LIMIT 1;
 SELECT AVG(length) FROM film;
 
 16.
+SELECT category.name, AVG(film.length)
+FROM category
+JOIN film_category ON film_category.category_id=category.category_id 
+JOIN film ON film.film_id=film_category.film_id
+GROUP BY category.category_id
+ORDER BY AVG(film.length) DESC;
+
+17.
+SELECT title, description
+FROM film_text
+WHERE description LIKE '%robot%';
+
+18.
+SELECT COUNT(film.release_year)
+FROM film
+WHERE film.release_year = '2010';
+
+19.
+SELECT film.title
+FROM film
+JOIN film_category ON film_category.film_id=film.film_id 
+JOIN category ON category.category_id=film_category.category_id
+WHERE category.name = 'horror';
+
+20.
+SELECT staff.first_name, staff.last_name
+FROM staff
+WHERE staff_id = '2';
+
+21.
+SELECT film.title
+FROM film
+JOIN film_actor ON film_actor.film_id = film.film_id
+JOIN actor ON actor.actor_id = film_actor.actor_id
+WHERE actor.first_name = 'FRED' AND actor.last_name = 'Costner';
+
+22.
+SELECT DISTINCT COUNT(country) AS distinct_countries
+FROM country;
+
+23.
+SELECT name
+FROM language
+ORDER BY language.name DESC;
+
+24.
+SELECT actor.first_name, actor.last_name
+FROM actor
+WHERE last_name LIKE '%son'
+ORDER BY first_name ASC;
+
+25.
+SELECT category.name, COUNT(film.film_id)
+FROM category
+JOIN film_category ON film_category.category_id = category.category_id
+JOIN film ON film.film_id = film_category.film_id
+GROUP BY category.category_id
+ORDER BY COUNT(category.category_id) DESC
+LIMIT 1;
+
+
+
+
+1.
+USE world;
+SELECT COUNT(city.ID)
+FROM city
+WHERE CountryCode = 'USA';
+
+2.
+SELECT Code, Population, LifeExpectancy
+FROM country
+WHERE Code = 'ARG';
+
+3.
+SELECT Code, LifeExpectancy
+FROM country
+WHERE LifeExpectancy IS NOT NULL
+ORDER BY LifeExpectancy DESC
+LIMIT 1;
+
+4.
+SELECT city.name
+FROM city
+JOIN country ON country.Capital = city.ID
+WHERE city.CountryCode = 'ESP';
+
+5.
+SELECT countryLanguage.Language
+FROM countryLanguage
+JOIN country ON country.Code = countryLanguage.CountryCode
+WHERE Region = 'Southeast Asia';
+
+6.
+SELECT city.name
+FROM city
+WHERE city.name LIKE 'F%'
+LIMIT 25;
+
+7.
+SELECT COUNT(city.ID)
+FROM city
+JOIN country ON country.Code = city.CountryCode
+WHERE country.Name = 'China';
+
+8.
+SELECT country.Name, Population
+FROM country
+WHERE Population > 1
+ORDER BY Population ASC
+LIMIT 1;
+
+9.
+SELECT COUNT(country.Code)
+FROM country;
+
+10.
+SELECT country.Name
+FROM country
+ORDER BY SurfaceArea DESC
+LIMIT 10;
+
+11.
+SELECT city.Name, city.Population
+FROM city
+WHERE CountryCode = 'Jpn'
+ORDER BY Population DESC
+LIMIT 5;
+
+12.
+UPDATE country
+SET HeadOfState = "Elizabeth II"
+WHERE HeadOfState = "Elisabeth II";
+SELECT *
+FROM country
+WHERE HeadOfState LIKE 'Elizabeth II';
+
+13.
+SELECT Name, Population, SurfaceArea, Population / SurfaceArea
+FROM country
+ORDER BY Population / SurfaceArea DESC
+LIMIT 10;
+
+14.
+SELECT DISTINCT Language
+FROM countrylanguage;
+
+15.
+SELECT Name, GNP
+FROM country
+ORDER BY GNP DESC
+LIMIT 10;
+
+16.
+SELECT Name, COUNT(Language)
+FROM country
+JOIN countryLanguage ON countryLanguage.CountryCode = country.Code
+GROUP BY country.Code
+ORDER BY COUNT(country.Code) DESC
+LIMIT 10;
+
+17.
+SELECT country.Name, countryLanguage.Percentage
+FROM country
+JOIN countryLanguage ON countryLanguage.CountryCode = country.Code
+WHERE Language = 'German' AND Percentage > 50
+ORDER BY Percentage DESC;
+
+18.
+SELECT Name, LifeExpectancy
+FROM country
+WHERE LifeExpectancy IS NOT NULL
+ORDER BY LifeExpectancy ASC
+LIMIT 1;
+
+19.
+SELECT GovernmentForm, COUNT(GovernmentForm)
+FROM country
+GROUP BY GovernmentForm
+ORDER BY COUNT(GovernmentForm) DESC
+LIMIT 3;
+
+20.
+SELECT COUNT(IndepYear)
+FROM country
+WHERE IndepYear IS NOT NULL;
+
+
+
+1.
+USE movielens;
+SELECT title, release_date
+FROM movies
+WHERE release_date BETWEEN '1983/01/01'AND '1993/01/01'
+ORDER BY release_date DESC;
+
+2.
+SELECT movies.title, AVG(ratings.rating)
+FROM movies
+JOIN ratings ON ratings.movie_id = movies.id
+WHERE rating = 1
+GROUP BY movies.id
+ORDER BY AVG(ratings.rating) ASC;
+
+3.
+SELECT movies.id, title
+FROM movies
+JOIN genres_movies ON genres_movies.movie_id = movies.id
+JOIN genres ON genres.id = genres_movies.genre_id
+JOIN ratings ON ratings.movie_id = movies.id
+JOIN users ON users.id = ratings.user_id
+JOIN occupations ON occupations.id = users.occupation_id
+WHERE genres.name = 'Sci-Fi' 
+AND users.age = '24'
+AND users.gender = 'm'
+AND ratings.rating = '5'  
+AND occupations.name = 'Student';
+
+4.
+SELECT title
+FROM movies
+WHERE release_date = (
+SELECT release_date
+FROM movies
+GROUP BY release_date
+ORDER BY COUNT(release_date) DESC
+LIMIT 1
+);
+
+5.
+SELECT genres.name, COUNT(title)
+FROM movies
+JOIN genres_movies ON genres_movies.movie_id = movies.id
+JOIN genres ON genres.id = genres_movies.genre_id
+GROUP BY genres.name
+ORDER BY COUNT(title) DESC;
+
+
